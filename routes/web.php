@@ -16,3 +16,11 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->get('/test1', 'StringFormatterController@createStringMap'
+);
+$router->get('/test', 'StringFormatterController@checkData'
+);
+$router->post('/getSymbol', 'StringFormatterController@getPopularSymbol'
+);
+$router->post('/getPalyndrome','StringFormatterController@checkPalindrome');
