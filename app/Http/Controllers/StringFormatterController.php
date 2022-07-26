@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
-use PhpParser\Node\Expr\Cast\Array_;
 
 class StringFormatterController extends Controller
 {
@@ -36,29 +35,81 @@ class StringFormatterController extends Controller
         }
         return $output;
     }
+
+    private function createCompareMap(Array $stringMap) 
+    {
+        $rawMap =  $stringMap;
+        $compareMap = [];
+        foreach($rawMap as $key => $value) {
+            $compareMap[] = [$key => $value];
+        }
+        return $compareMap;
+    }
+
+    private function calculateHighSecondSymbol(Array $data) {
+      
+        $highFrequencyData = $data;
+        $fisrtFrequencySymbol = null;
+        $firstLetter = '';
+        $secondFrequencySymbol = null;
+        $secondLetter = '';
+
+        foreach($highFrequencyData as $element) {
+            foreach($element as $key => $value) {
+                if($value > $fisrtFrequencySymbol && $key > $firstLetter ) {
+                    $fisrtFrequencySymbol = $value;
+                    $firstLetter = $key;
+                } 
+            }
+        }
+        foreach($highFrequencyData as $element) {
+            foreach($element as $key => $value) {
+                if($value > $secondFrequencySymbol && $value < $fisrtFrequencySymbol && $key > $secondLetter) {
+                    $secondFrequencySymbol = $value;
+                    $secondLetter = $key;
+                }
+            }    
+        }
+
+        return [$secondLetter, $secondFrequencySymbol] ;
+    }
     
-    public function getPopularSymbol(Request $request) {
+   
+    
+    public function getPopularSymbol(Request $request): String {
         
-        $formatString = $request['data'];
-        $dataArray = ["aaagggaabbbbccccccc"];
-        $compareArray = [];
-        
-        $this->createStringMap($formatString);
+        $formatString = $request['data2'];
+        $stringMap = [];
+        $compareMap = [];
+        $targetValue = null;
+        $output = '';   
+
+        $stringMap = $this->createStringMap($formatString);
         $length = strlen($formatString);
 
         for($i = 0; $i < $length; $i++) {
-            if($formatString[$i] == $formatString[$i + 1]) {
-                $compareArray[0] + 1; 
-            }
-            if($formatString[$i] != $formatString[$i + 1]) {
-
+            if($formatString[$i] == $this->checkData($formatString[$i], $stringMap) ) {
+                $stringMap[$formatString[$i]] ++;
             }
         }
-        
-        return $compareArray;
+       $compareMap = $this->createCompareMap($stringMap);
+       $targetValue = $this->calculateHighSecondSymbol($compareMap);
+
+        if ($targetValue[1] == null) {
+            $output = 'В строке нет второго по встречаяемости символа';
+        }
+        if ($targetValue[1] != null) {
+            $output = 'Символ '. $targetValue[0] . ' второй по популярности и встречается '. $targetValue[1] . ' раза';
+        }
+       // return $targetValue;
+        return $output;
     }
 
-    public function checkPalindrome() {
-        return 'Palindrome';
+    public function checkPalindrome(Request $request): String {
+        $checkWord = $request['$data'];
+
+        $length = 
+        for($i = 0;)
     }
+
 }
