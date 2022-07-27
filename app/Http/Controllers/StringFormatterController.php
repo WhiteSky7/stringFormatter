@@ -128,13 +128,13 @@ class StringFormatterController extends Controller
             $length = mb_strlen($checkWord);
             $output = '';
             
-            $output = $this->compareWord($checkWord, $length);
+            $output = $this->compareHalfWord($checkWord, $length);
             
             return response()->json(['response' => $output],200);
         }
     }
 
-    private function compareWord(String $s, Int $len) {
+    private function compareHalfWord(String $s, Int $len) {
        
         if(is_string($s)) {
             if(is_int($len)) {
